@@ -3,9 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueFinder.Server", "VenueFinder.Server\VenueFinder.Server.csproj", "{16E7F973-8004-4454-8CCB-FAC9CA721D4B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueFinder.API", "VenueFinder.Server\VenueFinder.API.csproj", "{16E7F973-8004-4454-8CCB-FAC9CA721D4B}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "venuefinder.client", "venuefinder.client\venuefinder.client.esproj", "{A866B471-F349-4380-B65E-D64702C27794}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueFinder.Domain", "VenueFinder.Domain\VenueFinder.Domain.csproj", "{97059020-13DE-49D2-92DF-0E7C19A3A0DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueFinder.Application", "VenueFinder.Application\VenueFinder.Application.csproj", "{7F09B122-983B-4335-83A4-75FB8FC9D517}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueFinder.Infrastructure", "VenueFinder.Infrastructure\VenueFinder.Infrastructure.csproj", "{DADFC38F-EEB1-4749-83AC-290376627A0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueFinder.Tests", "VenueFinder.Tests\VenueFinder.Tests.csproj", "{A2A32B73-2402-4193-8F33-1DBDA1862E7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +31,22 @@ Global
 		{A866B471-F349-4380-B65E-D64702C27794}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A866B471-F349-4380-B65E-D64702C27794}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A866B471-F349-4380-B65E-D64702C27794}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{97059020-13DE-49D2-92DF-0E7C19A3A0DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97059020-13DE-49D2-92DF-0E7C19A3A0DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97059020-13DE-49D2-92DF-0E7C19A3A0DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97059020-13DE-49D2-92DF-0E7C19A3A0DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F09B122-983B-4335-83A4-75FB8FC9D517}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F09B122-983B-4335-83A4-75FB8FC9D517}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F09B122-983B-4335-83A4-75FB8FC9D517}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F09B122-983B-4335-83A4-75FB8FC9D517}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DADFC38F-EEB1-4749-83AC-290376627A0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DADFC38F-EEB1-4749-83AC-290376627A0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DADFC38F-EEB1-4749-83AC-290376627A0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DADFC38F-EEB1-4749-83AC-290376627A0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2A32B73-2402-4193-8F33-1DBDA1862E7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2A32B73-2402-4193-8F33-1DBDA1862E7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2A32B73-2402-4193-8F33-1DBDA1862E7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2A32B73-2402-4193-8F33-1DBDA1862E7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
