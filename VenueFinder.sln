@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueFinder.Server", "VenueFinder.Server\VenueFinder.Server.csproj", "{16E7F973-8004-4454-8CCB-FAC9CA721D4B}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "venuefinder.client", "venuefinder.client\venuefinder.client.esproj", "{A866B471-F349-4380-B65E-D64702C27794}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{16E7F973-8004-4454-8CCB-FAC9CA721D4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16E7F973-8004-4454-8CCB-FAC9CA721D4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16E7F973-8004-4454-8CCB-FAC9CA721D4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16E7F973-8004-4454-8CCB-FAC9CA721D4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A866B471-F349-4380-B65E-D64702C27794}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A866B471-F349-4380-B65E-D64702C27794}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A866B471-F349-4380-B65E-D64702C27794}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{A866B471-F349-4380-B65E-D64702C27794}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A866B471-F349-4380-B65E-D64702C27794}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A866B471-F349-4380-B65E-D64702C27794}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1ECD8D07-3096-4A47-BDEF-D4F555635959}
+	EndGlobalSection
+EndGlobal
