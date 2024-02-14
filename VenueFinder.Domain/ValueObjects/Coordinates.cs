@@ -1,4 +1,6 @@
-﻿namespace VenueFinder.Domain
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace VenueFinder.Domain.ValueObjects
 {
     /// <summary>
     /// Coordinates Value Object
@@ -6,7 +8,10 @@
     /// </summary>
     public class Coordinates
     {
+        [BsonElement("latitude")]
         public double Latitude { get; }
+
+        [BsonElement("longitude")]
         public double Longitude { get; }
 
         public Coordinates()

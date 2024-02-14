@@ -1,4 +1,6 @@
-﻿namespace VenueFinder.Domain
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace VenueFinder.Domain.ValueObjects
 {
     /// <summary>
     /// Address Value Object
@@ -6,10 +8,19 @@
     /// </summary>
     public class Address
     {
+        [BsonElement("street")]
         public string Street { get; }
+
+        [BsonElement("city")]
         public string City { get; }
+
+        [BsonElement("state")]
         public string State { get; }
+
+        [BsonElement("postcode")]
         public string PostalCode { get; }
+
+        [BsonElement("country")]
         public string Country { get; }
 
         public Address()

@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="HotChocolate.AspNetCore" Version="13.8.1" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>8.*-*</Version>
     </PackageReference>
@@ -22,10 +23,7 @@
     <ProjectReference Include="..\venuefinder.client\venuefinder.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
+    <ProjectReference Include="..\VenueFinder.Infrastructure\VenueFinder.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
