@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VenueFinder.Application.Interfaces;
 using VenueFinder.Domain.Entities;
 
 namespace VenueFinder.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class VenuesController : ControllerBase
@@ -17,9 +19,10 @@ namespace VenueFinder.API.Controllers
 
         // GET: api/Venues
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Venue>>> GetVenuesByCategory(string category)
+        public async Task<ActionResult<IEnumerable<Venue>>> GetVenuesByCategory(string category,
+            string limit, string offset)
         {
-            var venues = await _venueService.GetVenuesByCategoryAsync(category);
+            var venues = await _venueService.GetVenuesByCategoryAsync(category, limit, offset);
             return Ok(venues);
         }
 

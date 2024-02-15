@@ -20,7 +20,7 @@ namespace VenueFinder.Application
 
         public async Task<IEnumerable<VenueCategory>> GetAllAsync()
         {
-            var recentUpdateThreshold = DateTime.Now.Subtract(_cacheDuration);
+            var recentUpdateThreshold = DateTime.UtcNow.Subtract(_cacheDuration);
             var cachedVenues = await _venueCategoryRepository.GetAllAsync(recentUpdateThreshold);
 
             if (cachedVenues.Any())
@@ -35,12 +35,12 @@ namespace VenueFinder.Application
                 var venueCategory = await _venueCategoryRepository.GetByNameAsync(category);
                 if (venueCategory != null)
                 {
-                    venueCategory.LastUpdated = DateTime.Now;
+                    venueCategory.LastUpdated = DateTime.UtcNow;
                     await UpdateAsync(venueCategory);
                 }
                 else
                 {
-                    venueCategory = new VenueCategory("", category, DateTime.Now);
+                    venueCategory = new VenueCategory(category, DateTime.UtcNow);
                     await CreateAsync(venueCategory);
                 }
             }

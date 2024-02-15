@@ -21,7 +21,14 @@ namespace VenueFinder.Infrastructure.Repositories
         public async Task<User> GetByIdAsync(string id)
         {
             return await _usersCollection
-                .Find(v => v.Id == id)
+                .Find(v => v.Id.Equals(id))
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<User> GetByUsernameAsync(string username)
+        {
+            return await _usersCollection
+                .Find(v => v.Username == username)
                 .FirstOrDefaultAsync();
         }
 
@@ -39,7 +46,7 @@ namespace VenueFinder.Infrastructure.Repositories
 
         public async Task DeleteAsync(string id)
         {
-            await _usersCollection.DeleteOneAsync(v => v.Id == id);
+            await _usersCollection.DeleteOneAsync(v => v.Id.Equals(id));
         }
     }
 }

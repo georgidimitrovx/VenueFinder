@@ -10,17 +10,18 @@ namespace VenueFinder.Domain.Entities
     public class Venue
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; private set; }
+        //[BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("id")]
+        public string Id { get; set; }
 
         [BsonElement("name")]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         [BsonElement("category")]
-        public string Category { get; private set; }
+        public string Category { get; set; }
 
-        [BsonElement("updated_on")]
-        public DateTime LastUpdated { get; private set; }
+        [BsonElement("last_updated")]
+        public DateTime LastUpdated { get; set; }
 
         // Constructor and methods
         public Venue()

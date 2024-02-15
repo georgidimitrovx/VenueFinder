@@ -12,6 +12,5 @@
     <Folder Include="src\components\" />
     <Folder Include="src\hooks\" />
     <Folder Include="src\services\" />
-    <Folder Include="src\pages\" />
   </ItemGroup>
 </Project>

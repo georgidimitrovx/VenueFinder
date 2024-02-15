@@ -1,13 +1,14 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace VenueFinder.Domain.Entities
 {
     public class User
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        //[BsonRepresentation(BsonType.ObjectId)]
+        [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
+        public ObjectId Id { get; set; }
 
         [BsonElement("username")]
         public string Username { get; set; }
@@ -26,7 +27,6 @@ namespace VenueFinder.Domain.Entities
 
         public User()
         {
-            Id = string.Empty;
             Username = string.Empty;
             Email = string.Empty;
             PasswordHash = string.Empty;
@@ -34,10 +34,9 @@ namespace VenueFinder.Domain.Entities
             CreatedAt = DateTime.MinValue;
         }
 
-        public User(string id, string username, string email, string passwordHash,
+        public User(string username, string email, string passwordHash,
             string fullName, DateTime createdAt)
         {
-            Id = id;
             Username = username;
             Email = email;
             PasswordHash = passwordHash;
