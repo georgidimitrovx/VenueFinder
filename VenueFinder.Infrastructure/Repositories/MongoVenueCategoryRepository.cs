@@ -17,6 +17,7 @@ namespace VenueFinder.Infrastructure.Repositories
         {
             return await _venueCategoriesCollection
                 .Find(v => v.LastUpdated >= lastUpdated)
+                .Sort(Builders<VenueCategory>.Sort.Ascending(doc => doc.Id))
                 .ToListAsync();
         }
 

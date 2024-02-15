@@ -24,7 +24,7 @@ namespace VenueFinder.Application
                 var content = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<CoinmapResponse>(content);
 
-                return result?.Venues[0] ?? new Venue();
+                return result?.Venue ?? new Venue();
             }
             catch (HttpRequestException e)
             {
@@ -41,7 +41,7 @@ namespace VenueFinder.Application
                 response.EnsureSuccessStatusCode();
 
                 var content = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<CoinmapResponse>(content);
+                var result = JsonConvert.DeserializeObject<ListCoinmapResponse>(content);
 
                 return result?.Venues ?? new List<Venue>();
             }
@@ -52,16 +52,16 @@ namespace VenueFinder.Application
             }
         }
 
-        public async Task<List<Venue>> GetVenuesByCategoryAsync(string category)
+        public async Task<List<Venue>> GetVenuesByCategoryAsync(string category, string limit, string offset)
         {
             try
             {
                 var response = await _httpClient
-                    .GetAsync($"https://coinmap.org/api/v1/venues/?category={category}");
+                    .GetAsync($"https://coinmap.org/api/v1/venues/?category={category}&limit={limit}&offset={offset}");
                 response.EnsureSuccessStatusCode();
 
                 var content = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<CoinmapResponse>(content);
+                var result = JsonConvert.DeserializeObject<ListCoinmapResponse>(content);
 
                 return result?.Venues ?? new List<Venue>();
             }

@@ -17,16 +17,17 @@ namespace VenueFinder.Application
             _coinmapService = coinmapService;
         }
 
-        public async Task<IEnumerable<Venue>> GetVenuesByCategoryAsync(string category)
+        public async Task<IEnumerable<Venue>> GetVenuesByCategoryAsync(string category,
+            string limit, string offset)
         {
             var recentUpdateThreshold = DateTime.Now.Subtract(_cacheDuration);
             var cachedVenues = await _venueRepository
-                .GetVenuesByCategoryAsync(category, recentUpdateThreshold);
+                .GetVenuesByCategoryAsync(category, limit, offset, recentUpdateThreshold);
 
-            if (cachedVenues.Any())
+            if (cachedVenues.Count() == int.Parse(limit))
                 return cachedVenues;
 
-            var externalVenues = await _coinmapService.GetVenuesByCategoryAsync(category);
+            var externalVenues = await _coinmapService.GetVenuesByCategoryAsync(category, limit, offset);
 
             // Update cache
             foreach (var venue in externalVenues)
@@ -34,10 +35,12 @@ namespace VenueFinder.Application
                 var venueCache = await _venueRepository.GetByIdAsync(venue.Id);
                 if (venueCache != null)
                 {
+                    venue.LastUpdated = DateTime.UtcNow;
                     await UpdateVenueAsync(venue);
                 }
                 else
                 {
+                    venue.LastUpdated = DateTime.UtcNow;
                     await CreateVenueAsync(venue);
                 }
             }
@@ -47,11 +50,11 @@ namespace VenueFinder.Application
 
         public async Task<Venue> GetVenueByIdAsync(string id)
         {
-            var recentUpdateThreshold = DateTime.Now.Subtract(_cacheDuration);
+            var recentUpdateThreshold = DateTime.UtcNow.Subtract(_cacheDuration);
             var cachedVenue = await _venueRepository
                 .GetByIdAsync(id);
 
-            if (cachedVenue.LastUpdated > recentUpdateThreshold)
+            if (cachedVenue != null && cachedVenue.LastUpdated > recentUpdateThreshold)
                 return cachedVenue;
 
             var externalVenue = await _coinmapService.GetVenueAsync(id);
@@ -59,10 +62,12 @@ namespace VenueFinder.Application
             // Update cache
             if (cachedVenue != null)
             {
+                externalVenue.LastUpdated = DateTime.UtcNow;
                 await UpdateVenueAsync(externalVenue);
             }
             else
             {
+                externalVenue.LastUpdated = DateTime.UtcNow;
                 await CreateVenueAsync(externalVenue);
             }
 

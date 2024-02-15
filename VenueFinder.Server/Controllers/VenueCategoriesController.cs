@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VenueFinder.Application.Interfaces;
 using VenueFinder.Domain.Entities;
 
 namespace VenueFinder.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class VenueCategoriesController : ControllerBase

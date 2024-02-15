@@ -23,6 +23,11 @@ namespace VenueFinder.Application
             return await _userRepository.GetByIdAsync(id);
         }
 
+        public async Task<User> GetByUsernameAsync(string username)
+        {
+            return await _userRepository.GetByUsernameAsync(username);
+        }
+
         public async Task<User> CreateAsync(User user)
         {
             // Additional validation or preprocessing can be performed here

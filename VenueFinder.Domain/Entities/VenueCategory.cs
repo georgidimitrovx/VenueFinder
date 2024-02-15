@@ -1,5 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
+using Newtonsoft.Json;
 
 namespace VenueFinder.Domain.Entities
 {
@@ -9,27 +11,25 @@ namespace VenueFinder.Domain.Entities
     /// </summary>
     public class VenueCategory
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; private set; }
+        [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
+        [JsonIgnore]
+        public ObjectId Id { get; set; }
 
         [BsonElement("name")]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
-        [BsonElement("updated_on")]
+        [BsonElement("last_updated")]
         public DateTime LastUpdated { get; set; }
 
         // Constructor and methods
         public VenueCategory()
         {
-            Id = string.Empty;
             Name = string.Empty;
             LastUpdated = DateTime.MinValue;
         }
 
-        public VenueCategory(string id, string name, DateTime lastUpdated)
+        public VenueCategory(string name, DateTime lastUpdated)
         {
-            Id = id;
             Name = name;
             LastUpdated = lastUpdated;
         }

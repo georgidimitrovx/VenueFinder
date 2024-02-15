@@ -14,10 +14,13 @@ namespace VenueFinder.Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<Venue>> GetVenuesByCategoryAsync(string category,
-            DateTime lastUpdated)
+            string limit, string offset, DateTime lastUpdated)
         {
             return await _venuesCollection
                 .Find(v => v.Category == category && v.LastUpdated >= lastUpdated)
+                .Sort(Builders<Venue>.Sort.Ascending(doc => doc.Id))
+                .Skip(int.Parse(offset))
+                .Limit(int.Parse(limit))
                 .ToListAsync();
         }
 
