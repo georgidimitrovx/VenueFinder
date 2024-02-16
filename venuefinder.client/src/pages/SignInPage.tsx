@@ -46,12 +46,8 @@ export default function SignInPage() {
         const username = formData.get('username');
         const password = formData.get('password');
 
-        console.log(username + " | " + password);
-
         try {
             const { data } = await signIn({ variables: { username, password } });
-            //console.log('SignIn success:', data);
-            //console.log(data.SignInAsync.Token, data.SignInAsync.Username);
             localStorage.setItem('username', data.signIn.username);
             localStorage.setItem('jwtToken', data.signIn.token);
             navigate('/');

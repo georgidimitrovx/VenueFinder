@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using System.Text;
 using VenueFinder.API.Mutations;
+using VenueFinder.API.Types;
 using VenueFinder.Application;
 using VenueFinder.Application.Interfaces;
 using VenueFinder.Application.Queries;
@@ -46,8 +47,12 @@ builder.Services.AddScoped<ICoinmapService, CoinmapService>();
 // GraphQL
 builder.Services
     .AddGraphQLServer()
-    .AddQueryType<VenueQuery>()
+    .AddQueryType(d => d.Name("Query"))
+        .AddTypeExtension<VenueQuery>()
+        .AddTypeExtension<VenueCategoryQuery>()
     .AddMutationType<AuthMutation>()
+    .AddType<VenueType>()
+    .AddType<VenueCategoryType>()
     .AddAuthorization();
 
 // External API

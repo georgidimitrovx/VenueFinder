@@ -1,12 +1,22 @@
-import { Autocomplete, Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, CircularProgress, Container, Grid, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import { getEndpoint } from "../Helpers";
+import { ApolloError, useLazyQuery } from "@apollo/client";
+import { GET_VENUE_CATEGORIES_QUERY } from "../queries";
 
 export default function HomePage() {
+    const navigate = useNavigate();
+
+    // States
     const [showPage, setShowPage] = useState(false);
     const [categoryOptions, setCategoryOptions] = useState(["Option"]);
-    let navigate = useNavigate();
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+
+    // GQL
+    const [getVenueCategories] = useLazyQuery(GET_VENUE_CATEGORIES_QUERY);
+
+    // Variables
     const jwtToken = localStorage.getItem('jwtToken');
     const username = localStorage.getItem('username');
 
@@ -15,14 +25,11 @@ export default function HomePage() {
         if (jwtToken == undefined || jwtToken == null || jwtToken == "") {
             navigate('/signIn');
         } else {
+            setIsLoading(true);
             setCategories();
-            setShowPage(true);
+            setIsLoading(false);
         }
     }, []);
-
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-    };
 
     const onLogOut = () => {
         localStorage.setItem('username', "");
@@ -30,27 +37,35 @@ export default function HomePage() {
         navigate('/signIn');
     };
 
-    const setCategories = () => {
-        fetch(getEndpoint() + 'api/VenueCategories', {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwtToken}`
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                const categories = data.map((v: { name: any; }) => v.name);
-                setCategoryOptions(categories);
-            })
-            .catch(error => console.error('Error fetching data: ', error));
+    const setCategories = async () => {
+        try {
+            const { data } = await getVenueCategories();
+
+            if (data == undefined)
+                return;
+
+            const categories = data.allVenueCategories.map((v: { name: any; }) => v.name);
+            setCategoryOptions(categories);
+            setShowPage(true);
+        }
+        catch (error) {
+            if (error instanceof ApolloError) {
+                console.error('GraphQL errors:', error.graphQLErrors);
+                console.error('Network error:', error.networkError);
+            } else {
+                console.error('Error:', error);
+            }
+        }
     };
 
-    return showPage ? (
+    const onSelectButtonClick = () => {
+        if (selectedCategory == null || selectedCategory == "")
+            return;
+
+        navigate(`/category/${selectedCategory}`);
+    };
+
+    return isLoading ? (<CircularProgress sx={{ marginTop: 3 }} />) : (
         <Container component="main" maxWidth="xs">
             <Box
                 sx={{
@@ -71,7 +86,10 @@ export default function HomePage() {
                         Log out
                     </Button>
                 </Box>
-                <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                <Typography variant="h4" sx={{ marginX: 2, marginTop: 3 }}>
+                    Categories
+                </Typography>
+                <Box sx={{ mt: 3 }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <Autocomplete
@@ -80,6 +98,9 @@ export default function HomePage() {
                                 options={categoryOptions}
                                 sx={{ width: 300 }}
                                 renderInput={(params) => <TextField {...params} label="Category" />}
+                                onChange={(_event: any, newValue: string | null) => {
+                                    setSelectedCategory(newValue!);
+                                }}
                             />
                         </Grid>
                     </Grid>
@@ -88,11 +109,12 @@ export default function HomePage() {
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
+                        onClick={onSelectButtonClick}
                     >
                         Select category
                     </Button>
                 </Box>
             </Box>
         </Container>
-    ) : <></>;
+    );
 }

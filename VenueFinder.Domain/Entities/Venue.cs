@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace VenueFinder.Domain.Entities
 {
@@ -20,6 +21,10 @@ namespace VenueFinder.Domain.Entities
         [BsonElement("category")]
         public string Category { get; set; }
 
+        [BsonElement("geolocation_degrees")]
+        [JsonProperty("geolocation_degrees")]
+        public string GeolocationDegrees { get; set; }
+
         [BsonElement("last_updated")]
         public DateTime LastUpdated { get; set; }
 
@@ -30,14 +35,17 @@ namespace VenueFinder.Domain.Entities
             Name = string.Empty;
             Category = string.Empty;
             LastUpdated = DateTime.MinValue;
+            GeolocationDegrees = string.Empty;
         }
 
-        public Venue(string id, string name, string category, DateTime lastUpdated)
+        public Venue(string id, string name, string category, DateTime lastUpdated,
+            string geolocationDegrees)
         {
             Id = id;
             Name = name;
             Category = category;
             LastUpdated = lastUpdated;
+            GeolocationDegrees = geolocationDegrees;
         }
     }
 

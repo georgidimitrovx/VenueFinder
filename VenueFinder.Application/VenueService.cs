@@ -51,8 +51,7 @@ namespace VenueFinder.Application
         public async Task<Venue> GetVenueByIdAsync(string id)
         {
             var recentUpdateThreshold = DateTime.UtcNow.Subtract(_cacheDuration);
-            var cachedVenue = await _venueRepository
-                .GetByIdAsync(id);
+            var cachedVenue = await _venueRepository.GetByIdAsync(id);
 
             if (cachedVenue != null && cachedVenue.LastUpdated > recentUpdateThreshold)
                 return cachedVenue;
