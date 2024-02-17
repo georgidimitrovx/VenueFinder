@@ -8,7 +8,6 @@ export default function HomePage() {
     const navigate = useNavigate();
 
     // States
-    const [showPage, setShowPage] = useState(false);
     const [categoryOptions, setCategoryOptions] = useState(["Option"]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [isLoading, setIsLoading] = useState(true);
@@ -17,23 +16,32 @@ export default function HomePage() {
     const [getVenueCategories] = useLazyQuery(GET_VENUE_CATEGORIES_QUERY);
 
     // Variables
-    const jwtToken = localStorage.getItem('jwtToken');
     const username = localStorage.getItem('username');
 
     // Check if user already logged in
     useEffect(() => {
-        if (jwtToken == undefined || jwtToken == null || jwtToken == "") {
+        const jwtToken = localStorage.getItem('jwtToken');
+        const jwtTokenExpiry = localStorage.getItem('jwtTokenExpiry');
+
+        if (jwtToken == undefined || jwtToken == null || jwtToken == "" ||
+            jwtTokenExpiry == undefined || jwtTokenExpiry == null || jwtTokenExpiry == "") {
             navigate('/signIn');
-        } else {
-            setIsLoading(true);
-            setCategories();
-            setIsLoading(false);
+            return;
         }
+
+        const dateNow = new Date();
+        if (parseInt(jwtTokenExpiry) < dateNow.getTime()) {
+            onLogOut();
+            return;
+        }
+
+        setCategories();
     }, []);
 
     const onLogOut = () => {
         localStorage.setItem('username', "");
         localStorage.setItem('jwtToken', "");
+        localStorage.setItem('jwtTokenExpiry', "");
         navigate('/signIn');
     };
 
@@ -46,7 +54,7 @@ export default function HomePage() {
 
             const categories = data.allVenueCategories.map((v: { name: any; }) => v.name);
             setCategoryOptions(categories);
-            setShowPage(true);
+            setIsLoading(false);
         }
         catch (error) {
             if (error instanceof ApolloError) {
@@ -65,7 +73,14 @@ export default function HomePage() {
         navigate(`/category/${selectedCategory}`);
     };
 
-    return isLoading ? (<CircularProgress sx={{ marginTop: 3 }} />) : (
+    return isLoading ? (
+        <Container component="main" maxWidth="xs">
+            <Typography>
+                Loading Venue Finder. Please wait.
+            </Typography>
+            <CircularProgress sx={{ marginTop: 3 }} />
+        </Container>
+    ) : (
         <Container component="main" maxWidth="xs">
             <Box
                 sx={{
@@ -86,7 +101,7 @@ export default function HomePage() {
                         Log out
                     </Button>
                 </Box>
-                <Typography variant="h4" sx={{ marginX: 2, marginTop: 3 }}>
+                <Typography variant="h5" sx={{ marginX: 2, marginTop: 3 }}>
                     Categories
                 </Typography>
                 <Box sx={{ mt: 3 }}>

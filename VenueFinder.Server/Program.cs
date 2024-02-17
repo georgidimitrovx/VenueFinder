@@ -85,10 +85,18 @@ builder.Services.AddAuthentication(options =>
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin",
+    options.AddPolicy("AllowSpecificOriginDevelopment",
         builder =>
         {
             builder.WithOrigins("https://localhost:5173")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+
+    options.AddPolicy("AllowSpecificOriginProduction",
+        builder =>
+        {
+            builder.WithOrigins("https://bookbazaarserver20240206094222.azurewebsites.net")
                    .AllowAnyHeader()
                    .AllowAnyMethod();
         });
@@ -107,7 +115,8 @@ app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("AllowSpecificOriginDevelopment");
+app.UseCors("AllowSpecificOriginProduction");
 
 app.UseAuthentication();
 app.UseAuthorization();

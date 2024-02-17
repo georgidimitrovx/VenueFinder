@@ -1,12 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongodb-service
+  name: venuefinderrelease2-mongodb-loadbalancer
+  namespace: default
 spec:
-  selector:
-    app: mongodb
+  type: LoadBalancer
   ports:
     - protocol: TCP
-      port: 27017  # Port on which MongoDB is running
-      targetPort: 27017  # Port on MongoDB pods
-  type: LoadBalancer
+      port: 27017
+      targetPort: mongodb
+  selector:
+    app.kubernetes.io/component: mongodb
+    app.kubernetes.io/instance: venuefinderrelease2
+    app.kubernetes.io/name: mongodb

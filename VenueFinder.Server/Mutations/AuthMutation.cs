@@ -22,8 +22,9 @@ namespace VenueFinder.API.Mutations
             }
 
             var token = authService.GenerateJwtToken(username);
+            var tokenExpiry = DateTime.Now.AddHours(1);
 
-            return new AuthPayload(username, token);
+            return new AuthPayload(username, token, tokenExpiry.Ticks.ToString());
         }
 
         public async Task<AuthPayload> SignUpAsync(string username, string password,
@@ -48,8 +49,9 @@ namespace VenueFinder.API.Mutations
             }
 
             var token = authService.GenerateJwtToken(username);
+            var tokenExpiry = DateTime.Now.AddHours(1);
 
-            return new AuthPayload(username, token);
+            return new AuthPayload(username, token, tokenExpiry.Ticks.ToString());
         }
     }
 }

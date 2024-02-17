@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -13,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ApolloError, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { SIGN_IN_MUTATION } from '../mutations';
 
 function Copyright(props: any) {
@@ -26,17 +24,22 @@ function Copyright(props: any) {
 
 export default function SignInPage() {
     const [showPage, setShowPage] = useState(false);
-    const [signIn] = useMutation(SIGN_IN_MUTATION);
+    const [signIn, { error }] = useMutation(SIGN_IN_MUTATION);
+
     let navigate = useNavigate();
 
     // Check if user already logged in
     useEffect(() => {
         const token = localStorage.getItem('jwtToken');
-        if (token != null && token != undefined && token != "") {
+        const jwtTokenExpiry = localStorage.getItem('jwtTokenExpiry');
+
+        if (token != null && token != undefined && token != "" &&
+            jwtTokenExpiry != null && jwtTokenExpiry != undefined && jwtTokenExpiry != "") {
             navigate('/');
-        } else {
-            setShowPage(true);
+            return;
         }
+
+        setShowPage(true);
     }, []);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -50,15 +53,11 @@ export default function SignInPage() {
             const { data } = await signIn({ variables: { username, password } });
             localStorage.setItem('username', data.signIn.username);
             localStorage.setItem('jwtToken', data.signIn.token);
+            localStorage.setItem('jwtTokenExpiry', data.signIn.tokenExpiry);
             navigate('/');
         }
         catch (error) {
-            if (error instanceof ApolloError) {
-                console.error('GraphQL errors:', error.graphQLErrors);
-                console.error('Network error:', error.networkError);
-            } else {
-                console.error('SignIn error:', error);
-            }
+            console.error(error);
         }
     };
 
@@ -79,6 +78,11 @@ export default function SignInPage() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
+                {error != undefined ? (
+                    <Typography component="h1" variant="subtitle1" sx={{ color: "red", marginTop: 2 }}>
+                        {error.message}
+                    </Typography>)
+                    : null}
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                     <TextField
                         margin="normal"
@@ -100,10 +104,6 @@ export default function SignInPage() {
                         id="password"
                         autoComplete="current-password"
                     />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
                     <Button
                         type="submit"
                         fullWidth
@@ -112,12 +112,7 @@ export default function SignInPage() {
                     >
                         Sign In
                     </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
-                            </Link>
-                        </Grid>
+                    <Grid container justifyContent="center">
                         <Grid item>
                             <Link href="./signUp" variant="body2">
                                 {"Don't have an account? Sign Up"}

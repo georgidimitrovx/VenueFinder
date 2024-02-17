@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, CircularProgress, Container, Grid, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Grid, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { ApolloError, useLazyQuery } from "@apollo/client";
@@ -22,17 +22,27 @@ export default function CategoryPage() {
     const [getCategoryVenues] = useLazyQuery(GET_CATEGORY_VENUES_QUERY);
 
     // Variables
-    const jwtToken = localStorage.getItem('jwtToken');
     const username = localStorage.getItem('username');
 
     // Check if user already logged in
     useEffect(() => {
-        if (jwtToken == undefined || jwtToken == null || jwtToken == "") {
+        const jwtToken = localStorage.getItem('jwtToken');
+        const jwtTokenExpiry = localStorage.getItem('jwtTokenExpiry');
+
+        if (jwtToken == undefined || jwtToken == null || jwtToken == "" ||
+            jwtTokenExpiry == undefined || jwtTokenExpiry == null || jwtTokenExpiry == "") {
             navigate('/signIn');
-        } else {
-            setShowPage(true);
-            listCategoryVenues();
+            return;
         }
+
+        const dateNow = new Date();
+        if (parseInt(jwtTokenExpiry) < dateNow.getTime()) {
+            onLogOut();
+            return;
+        }
+
+        setShowPage(true);
+        listCategoryVenues();
     }, [categoryPage]);
 
     const onLogOut = () => {
@@ -133,7 +143,7 @@ export default function CategoryPage() {
                         Log out
                     </Button>
                 </Box>
-                <Typography variant="h4" sx={{ marginX: 2, marginTop: 3}}>
+                <Typography variant="h5" sx={{ marginX: 2, marginTop: 3 }}>
                     Venues in category '{categoryName}'
                 </Typography>
                 {isLoading ? (<CircularProgress sx={{ marginTop: 3 }} />) : (
