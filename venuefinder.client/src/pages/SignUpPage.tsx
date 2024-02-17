@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -13,7 +11,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getEndpoint } from '../Helpers';
+import { ApolloError, useMutation } from '@apollo/client';
+import { SIGN_UP_MUTATION } from '../mutations';
 
 function Copyright(props: any) {
     return (
@@ -25,48 +24,45 @@ function Copyright(props: any) {
 
 export default function SignUpPage() {
     const [showPage, setShowPage] = useState(false);
+    const [signUp, { error }] = useMutation(SIGN_UP_MUTATION);
     let navigate = useNavigate();
 
     // Check if user already logged in
     useEffect(() => {
-        if (localStorage.getItem('jwtToken') != null) {
+        const token = localStorage.getItem('jwtToken');
+        const jwtTokenExpiry = localStorage.getItem('jwtTokenExpiry');
+
+        if (token != null && token != undefined && token != "" &&
+            jwtTokenExpiry != null && jwtTokenExpiry != undefined && jwtTokenExpiry != "") {
             navigate('/');
-            //console.log('JWT Token is present');
-        } else {
-            setShowPage(true);
-            //console.log('JWT Token is not present');
+            return;
         }
+
+        setShowPage(true);
     }, []);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const data = new FormData(event.currentTarget);
+        const formData = new FormData(event.currentTarget);
+        const username = formData.get('username');
+        const password = formData.get('password');
 
-        const registerData = {
-            Username: data.get('username'),
-            Password: data.get('password')
-        };
-
-        fetch(getEndpoint() + 'api/Auth/signUp', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(registerData)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                localStorage.setItem('username', data.Username);
-                localStorage.setItem('jwtToken', data.token);
-                navigate('/');
-            })
-            .catch(error => console.error('Error fetching data: ', error));
+        try {
+            const { data } = await signUp({ variables: { username, password } });
+            localStorage.setItem('username', data.signUp.username);
+            localStorage.setItem('jwtToken', data.signUp.token);
+            localStorage.setItem('jwtTokenExpiry', data.signUp.tokenExpiry);
+            navigate('/');
+        }
+        catch (error) {
+            if (error instanceof ApolloError) {
+                console.error('GraphQL errors:', error.graphQLErrors);
+                console.error('Network error:', error.networkError);
+            } else {
+                console.error('SignUp error:', error);
+            }
+        }
     };
 
     return showPage ? (
@@ -86,6 +82,11 @@ export default function SignUpPage() {
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
+                {error != undefined ? (
+                    <Typography component="h1" variant="subtitle1" sx={{ color: "red", marginTop: 2 }}>
+                        {error.message}
+                    </Typography>)
+                    : null}
                 <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
@@ -110,9 +111,14 @@ export default function SignUpPage() {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <FormControlLabel
-                                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                                label="I want to receive inspiration, marketing promotions and updates via email."
+                            <TextField
+                                required
+                                fullWidth
+                                name="password2"
+                                label="Repeat Password"
+                                type="password"
+                                id="password2"
+                                autoComplete="new-password"
                             />
                         </Grid>
                     </Grid>

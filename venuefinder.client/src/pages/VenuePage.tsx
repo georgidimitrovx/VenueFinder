@@ -12,23 +12,33 @@ export default function VenuePage() {
 
     // States
     const [showPage, setShowPage] = useState(false);
-    const [venue, setVenue] = useState([{ id: 1, name: "" }]);
+    const [venue, setVenue] = useState({ id: 1, name: "", geolocationDegrees: "" });
 
     // GQL
     const [getVenueQuery] = useLazyQuery(GET_VENUE_QUERY);
 
     // Variables
-    const jwtToken = localStorage.getItem('jwtToken');
     const username = localStorage.getItem('username');
 
     // Check if user already logged in
     useEffect(() => {
-        if (jwtToken == undefined || jwtToken == null || jwtToken == "") {
+        const jwtToken = localStorage.getItem('jwtToken');
+        const jwtTokenExpiry = localStorage.getItem('jwtTokenExpiry');
+
+        if (jwtToken == undefined || jwtToken == null || jwtToken == "" ||
+            jwtTokenExpiry == undefined || jwtTokenExpiry == null || jwtTokenExpiry == "") {
             navigate('/signIn');
-        } else {
-            setShowPage(true);
-            loadVenue();
+            return;
         }
+
+        const dateNow = new Date();
+        if (parseInt(jwtTokenExpiry) < dateNow.getTime()) {
+            onLogOut();
+            return;
+        }
+
+        setShowPage(true);
+        loadVenue();
     }, []);
 
     const onLogOut = () => {
@@ -91,7 +101,7 @@ export default function VenuePage() {
                         Log out
                     </Button>
                 </Box>
-                <Typography variant="h4" sx={{ marginX: 2, marginTop: 3 }}>
+                <Typography variant="h5" sx={{ marginX: 2, marginTop: 3 }}>
                     Venue details
                 </Typography>
                 {isLoading ? (<CircularProgress sx={{ marginTop: 3 }} />) : (
